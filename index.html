@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Está matando aula?</title>
+  <script src="students.js"></script>
+  <script>
+    var periods = [
+      {
+        period: 0,
+        start: 7*60,
+        end: 7*60+45
+      },
+      {
+        period: 1,
+        start: 7*60+46,
+        end: 8*60+30
+      },
+      {
+        period: 2,
+        start: 8*60+31,
+        end: 9*60+15
+      },
+      {
+        period: 3,
+        start: 9*60+35,
+        end: 10*60+20
+      },
+      {
+        period: 4,
+        start: 10*60+21,
+        end: 11*60+05
+      },
+      {
+        period: 5,
+        start: 11*60+06,
+        end: 11*60+50
+      },
+      {
+        period: 6,
+        start: 11*60+51,
+        end: 13*60
+      },
+      {
+        period: 7,
+        start: 13*60+01,
+        end: 13*60+45
+      },
+      {
+        period: 8,
+        start: 13*60+46,
+        end: 14*60+30
+      },
+      {
+        period: 9,
+        start: 14*60+31,
+        end: 15*60+15
+      },
+      {
+        period: 10,
+        start: 15*60+35,
+        end: 16*60+20
+      },
+      {
+        period: 11,
+        start: 16*60+21,
+        end: 17*60+05
+      },
+      {
+        period: 12,
+        start: 17*60+06,
+        end: 17*60+50
+      },
+      {
+        period: 13,
+        start: 17*60+51,
+        end: 18*60+35
+      },
+      {
+        period: 14,
+        start: 18*60+36,
+        end: 19*60+30
+      },
+      {
+        period: 15,
+        start: 19*60+31,
+        end: 20*60+15
+      },
+      {
+        period: 16,
+        start: 20*60+30,
+        end: 21*60+15
+      },
+      {
+        period: 17,
+        start: 21*60+16,
+        end: 22*60+00
+      },
+      {
+        period: 18,
+        start: 22*60+01,
+        end: 22*60+45
+      }
+    ]
+    function convertTimeToPeriod(time)
+    {
+      var current = 0
+      periods.forEach(p => 
+        {
+          if(p.start <= time && time <= p.end)
+            current = p.period;
+        }
+      )
+      return current;
+    }
+
+    function searchStudent(ra)
+    {
+      let keys = Object.keys(data)
+      for (var i = 0; i < keys.length; i++)
+      {
+        if (data[keys[i]].ra.normalize() === ra.normalize())
+        {
+          return data[keys[i]];
+        }
+      }
+      return null;
+    }
+    function checkHour(e)
+    {
+      e.preventDefault()
+      let p = document.getElementById("resultado");
+      let ra = document.getElementById("ra").value;
+      let student = searchStudent(ra)
+      if (student == null) {
+        p.innerHTML = "Não foi encontrado o estudante com o RA: "+ra
+        return;
+      }
+        
+      let now = new Date();
+      let weekDay = now.getDay()-1;
+      let time = now.getHours() * 60 + now.getMinutes();
+      let period = convertTimeToPeriod(time);
+      let aula = student['horario'][weekDay][period]
+      if (aula.normalize() === "".normalize())
+      {
+        p.innerHTML = "Não tem nenhuma aula prevista"
+      } else {
+        p.innerHTML = "Deveria estar na aula de: " + aula
+      }
+    }
+    
+  </script>
+</head>
+<body>
+  <form method="GET" onsubmit="return checkHour(event)">
+    <input type="text" name="ra" id="ra" />
+    <button id="check-hour">Checar horário</button>
+  </form>
+  <p id="resultado"></p>
+</body>
+
+</html>
